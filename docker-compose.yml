@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  webserver:
+    build:
+      context: ./WebMessagingService.API
+      dockerfile: Dockerfile
+    ports:
+      - "5135:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=postgres;Password=b12345678;Database=postgres
+
+  client1:
+    build:
+      context: ./client1
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - webserver
+
+  client2:
+    build:
+      context: ./client2
+      dockerfile: Dockerfile
+    ports:
+      - "5002:80"
+    depends_on:
+      - webserver
+
+  client3:
+    build:
+      context: ./client3
+      dockerfile: Dockerfile
+    ports:
+      - "5003:80"
+    depends_on:
+      - webserver
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: b12345678
+    ports:
+      - "5432:5432"
+
+
+
+
+
+
